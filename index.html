@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Ultimate Drive</title>
+<style>
+body {
+  margin: 0;
+  overflow: hidden;
+  background: #222;
+}
+canvas {
+  display: block;
+  margin: auto;
+  background: linear-gradient(#555, #222);
+}
+#speed {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: white;
+  font-size: 20px;
+  font-family: Arial;
+}
+</style>
+</head>
+<body>
+
+<div id="speed">Hız: 0 km/h</div>
+<canvas id="game" width="800" height="500"></canvas>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+const speedText = document.getElementById("speed");
+
+let car = { x: 380, y: 380, w: 40, h: 70, speed: 0 };
+let keys = {};
+
+document.addEventListener("keydown", e => keys[e.key] = true);
+document.addEventListener("keyup", e => keys[e.key] = false);
+
+function gameLoop() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  if (keys["ArrowUp"]) car.speed += 0.2;
+  if (keys["ArrowDown"]) car.speed -= 0.2;
+  if (keys["ArrowLeft"]) car.x -= 3;
+  if (keys["ArrowRight"]) car.x += 3;
+
+  car.speed *= 0.98;
+  car.y -= car.speed;
+
+  if (car.y < -100) car.y = canvas.height;
+
+  ctx.fillStyle = "red";
+  ctx.fillRect(car.x, car.y, car.w, car.h);
+
+  speedText.innerText = "Hız: " + Math.abs(car.speed * 10).toFixed(0) + " km/h";
+
+  requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
+</script>
+
+</body>
+</html>
